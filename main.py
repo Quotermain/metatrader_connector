@@ -4,6 +4,7 @@ from utils.get_candles import get_candles
 from utils.send_message import send_message
 from utils.check_signal_is_sent import check_signal_is_sent
 from utils.set_signal_is_sent_flag import set_signal_is_sent_flag
+from utils.calculate_trade_size import calculate_trade_size
 
 with open('data/tickers/all_tickers.pickle', 'rb') as file:
     ALL_TICKERS = pickle.load(file)
@@ -27,7 +28,12 @@ while True:
             if cond_day and cond_5min:
                 signal_is_sent = check_signal_is_sent(ticker)
                 if not signal_is_sent:
-                    send_message(ticker)
+                    acceptable_PERC_loss = dict_high_low_5min_dif[ticker] * 0.5
+                    last_close = df.close[-1]
+                    trade_size = calculate_trade_size(
+                        ticker, acceptable_PERC_loss, last_close
+                    )
+                    send_message(ticker, trade_size)
                     print(ticker)
                     set_signal_is_sent_flag(ticker)
         except KeyError:
