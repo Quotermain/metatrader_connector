@@ -5,6 +5,9 @@ from utils.send_message import send_message
 from utils.check_signal_is_sent import check_signal_is_sent
 from utils.set_signal_is_sent_flag import set_signal_is_sent_flag
 from utils.calculate_trade_size import calculate_trade_size
+from utils.get_positions import get_positions
+
+from time import sleep
 
 with open('data/tickers/all_tickers.pickle', 'rb') as file:
     ALL_TICKERS = pickle.load(file)
@@ -17,6 +20,7 @@ with open('data/thresholds/high_low_5min_dif.pickle', 'rb') as file:
 while True:
     for ticker in ALL_TICKERS:
         try:
+
             df = get_candles(ticker, 'mt5.TIMEFRAME_D1', 1)
             open_close_day_dif = abs(df.open - df.close) / df.open
             cond_day = all(open_close_day_dif > dict_open_close_day_dif[ticker])
@@ -33,8 +37,8 @@ while True:
                     trade_size = calculate_trade_size(
                         ticker, acceptable_PERC_loss, last_close
                     )
-                    send_message(ticker, trade_size)
+                    send_message(ticker + ' ' + str(trade_size))
                     print(ticker)
                     set_signal_is_sent_flag(ticker)
-        except KeyError:
+        except (KeyError):
             continue

@@ -2,7 +2,7 @@ from mysql.connector import connect
 import sys
 
 CRIDENTIALS = {
-    'host': 'localhost', 'user': 'root',
+    'host': 'localhost', 'user': 'root', 'autocommit': True,
     'password': 'Quotermain233', 'database': 'trading'
 }
 connection = connect(**CRIDENTIALS)
