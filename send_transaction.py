@@ -13,6 +13,7 @@ def send_transaction(ticker, volume, direction):
 
     ticker_info = mt5.symbol_info(ticker)
     dgts = ticker_info.digits
+    point = ticker_info.point
 
     if direction == 'short':
         direction = mt5.ORDER_TYPE_SELL
@@ -32,16 +33,19 @@ def send_transaction(ticker, volume, direction):
         "symbol": ticker,
         "volume": volume,
         'type': direction,
+        'price': price,
         'sl': stop_limit,
         'tp': take_profit,
-        "deviation": 20,
+        "deviation": 1,
         "type_time": mt5.ORDER_TIME_GTC
     }
 
     result = mt5.order_send(request)
 
-    return result
+    return result.comment, stop_limit, take_profit
 
 if __name__ == '__main__':
     ticker, volume, direction = argv[1], float(argv[2]), argv[3]
-    print(send_transaction(ticker, volume, direction))
+    result = send_transaction(ticker, volume, direction)
+    for item in result:
+        print(item)

@@ -12,6 +12,9 @@ from time import sleep
 with open('data/tickers/all_tickers.pickle', 'rb') as file:
     ALL_TICKERS = pickle.load(file)
 
+#Removes some assets because of conditions of the market
+ALL_TICKERS = [ticker for ticker in ALL_TICKERS if ticker not in ('USDZAR', )]
+
 with open('data/thresholds/open_close_day_dif.pickle', 'rb') as file:
     dict_open_close_day_dif = pickle.load(file)
 with open('data/thresholds/high_low_5min_dif.pickle', 'rb') as file:
@@ -38,7 +41,7 @@ while True:
                         ticker, acceptable_PERC_loss, last_close
                     )
                     send_message(ticker + ' ' + str(trade_size))
-                    print(ticker)
+                    print(ticker, trade_size)
                     set_signal_is_sent_flag(ticker)
         except (KeyError):
             continue
