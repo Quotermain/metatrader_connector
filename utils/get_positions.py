@@ -6,7 +6,7 @@ def get_positions():
         print("initialize() failed, error code =", mt5.last_error())
         quit()
     positions = mt5.positions_get()
-    if positions is None:
+    if (positions is None) or (len(positions) == 0):
         return None
     else:
         positions = pd.DataFrame(
@@ -15,4 +15,5 @@ def get_positions():
         return positions
 
 if __name__ == '__main__':
-    print(get_positions())
+    while True:
+        print(get_positions())
