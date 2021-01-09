@@ -19,7 +19,7 @@ def check_trade_conditions(ticker, df_day, df_5min):
             dict_open_close_5min_dif[ticker]
         ) and
         (
-            (df_5min.close[-1] - df_5min.open[-1]) /   df_5min.open[-1] <
+            abs((df_5min.close[-1] - df_5min.open[-1])) /   df_5min.open[-1] <
             dict_open_close_5min_dif[ticker]
         )
     )
@@ -36,7 +36,7 @@ def check_trade_conditions(ticker, df_day, df_5min):
             dict_open_close_5min_dif[ticker]
         ) and
         (
-            (df_5min.open[-1] - df_5min.close[-1]) / df_5min.close[-1] <
+            abs((df_5min.open[-1] - df_5min.close[-1])) / df_5min.close[-1] <
             dict_open_close_5min_dif[ticker]
         )
     )
