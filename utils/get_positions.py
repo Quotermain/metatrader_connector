@@ -1,11 +1,11 @@
 import MetaTrader5 as mt5
 import pandas as pd
 
-def get_positions():
+def get_positions(ticker):
     if not mt5.initialize():
         print("initialize() failed, error code =", mt5.last_error())
         quit()
-    positions = mt5.positions_get()
+    positions = mt5.positions_get(ticker)
     if (positions is None) or (len(positions) == 0):
         return None
     else:
