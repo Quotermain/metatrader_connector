@@ -31,8 +31,6 @@ with open('data/thresholds/open_close_5min_dif.pickle', 'rb') as file:
 
 def run(ticker):
 
-    #print(ticker)
-
     if not mt5.initialize():
         print("initialize() failed, error code =", mt5.last_error())
         quit()
@@ -45,13 +43,6 @@ def run(ticker):
     else:
         df_day = get_american_candles(ticker, '2d', '1d')
         df_5min = get_american_candles(ticker, '10m', '5m')
-
-    '''if ticker in USA_STOCKS:
-        print(ticker)
-        print(df_day)
-        print(df_5min)
-        print()
-        sleep(1)'''
 
     signal = check_trade_conditions(ticker, df_day, df_5min)
 
@@ -81,16 +72,14 @@ def run(ticker):
 
 if __name__ == '__main__':
     while True:
-        with Pool(2) as p:
-            try:
-                p.map_async(run, ALL_TICKERS).get(30)
-            except KeyboardInterrupt:
-                print("Caught KeyboardInterrupt, terminating workers")
-                p.terminate()
-                p.join()
-                break
-            except Exception as e:
-                print(e)
-                send_message(e)
-                p.terminate()
-                p.join()
+        try:
+            for ticker in ALL_TICKERS:
+                run(ticker)
+        except KeyboardInterrupt:
+            print("Caught KeyboardInterrupt, terminating workers")
+            break
+        except Exception as e:
+            print(e)
+            send_message(e)
+            sleep(50000)
+            continue
