@@ -64,7 +64,7 @@ def run(ticker):
 
             direction = 'sell' if signal == 'sell' else 'buy'
             send_message(ticker + ' ' + direction + ' ' + str(trade_size))
-            print(send_transaction(ticker, trade_size, direction))
+            #print(send_transaction(ticker, trade_size, direction))
             cur_time = datetime.now().time()
             print(cur_time, ticker, direction, trade_size)
             set_signal_is_sent_flag(ticker)

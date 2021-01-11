@@ -42,9 +42,9 @@ def check_trade_conditions(ticker, df_day, df_5min):
     )
 
     if condition_short:
-        return 'short'
+        return 'sell'
     elif condition_long:
-        return 'long'
+        return 'buy'
     else:
         return None
 
