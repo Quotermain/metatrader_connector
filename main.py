@@ -13,6 +13,7 @@ import MetaTrader5 as mt5
 from datetime import datetime
 from time import sleep
 from multiprocessing import Pool
+import sys
 
 with open('data/tickers/rus_stocks.pickle', 'rb') as file:
     RUS_STOCKS = pickle.load(file)
@@ -30,6 +31,8 @@ with open('data/thresholds/open_close_5min_dif.pickle', 'rb') as file:
 
 def run(ticker):
 
+    #print(ticker)
+
     if not mt5.initialize():
         print("initialize() failed, error code =", mt5.last_error())
         quit()
@@ -43,8 +46,12 @@ def run(ticker):
         df_day = get_american_candles(ticker, '2d', '1d')
         df_5min = get_american_candles(ticker, '10m', '5m')
 
-    print(get_positions(ticker))
-    #sleep(1)
+    '''if ticker in USA_STOCKS:
+        print(ticker)
+        print(df_day)
+        print(df_5min)
+        print()
+        sleep(1)'''
 
     signal = check_trade_conditions(ticker, df_day, df_5min)
 
@@ -52,7 +59,7 @@ def run(ticker):
         signal_is_sent = check_signal_is_sent(ticker)
         position = get_positions(ticker)
 
-        if (not signal_is_sent) and (position is not None):
+        if (not signal_is_sent) and (position is None):
 
             acceptable_PERC_loss = dict_open_close_5min_dif[ticker]
             last_close = df_5min.close[-1]
@@ -64,9 +71,9 @@ def run(ticker):
             trade_size = round(trade_size / contract_size / min_volume)
             trade_size = trade_size * min_volume
 
-            direction = 'short' if signal == 'short' else 'long'
-            send_transaction(ticker, trade_size, direction)
+            direction = 'sell' if signal == 'sell' else 'buy'
             send_message(ticker + ' ' + direction + ' ' + str(trade_size))
+            print(send_transaction(ticker, trade_size, direction))
             cur_time = datetime.now().time()
             print(cur_time, ticker, direction, trade_size)
             set_signal_is_sent_flag(ticker)
@@ -76,16 +83,14 @@ if __name__ == '__main__':
     while True:
         with Pool(2) as p:
             try:
-                p.map(run, ALL_TICKERS)
+                p.map_async(run, ALL_TICKERS).get(30)
             except KeyboardInterrupt:
                 print("Caught KeyboardInterrupt, terminating workers")
                 p.terminate()
+                p.join()
                 break
-            else:
-                pass
-
-        '''for ticker in ALL_TICKERS:
-            try:
-                run(ticker)
-            except (KeyError):
-                continue'''
+            except Exception as e:
+                print(e)
+                send_message(e)
+                p.terminate()
+                p.join()
