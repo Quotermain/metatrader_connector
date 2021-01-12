@@ -5,7 +5,7 @@ def calculate_trade_size(ticker, acceptable_PERC_loss, last_close):
     if '.MM' in ticker:
         USDRUB = get_candles('USDRUB', 'mt5.TIMEFRAME_M5', 1).close[0]
         last_close = last_close / USDRUB
-    trade_size = 1 / (acceptable_PERC_loss * last_close)
+    trade_size = 10 / (acceptable_PERC_loss * last_close)
     return trade_size
 
 if __name__ == '__main__':
