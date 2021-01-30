@@ -29,5 +29,6 @@ def send_transaction(ticker, volume, type):
 
 if __name__ == '__main__':
     ticker, volume, direction = argv[1], float(argv[2]), argv[3]
+    print(volume)
     result = send_transaction(ticker, volume, direction)
     print(result)

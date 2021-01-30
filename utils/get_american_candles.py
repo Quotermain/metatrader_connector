@@ -1,11 +1,16 @@
 import yfinance as yf
 from sys import argv
 
+COL_NAMES = {
+    'Open': 'open', 'High': 'high', 'Low': 'low',
+    'Close': 'close', 'Volume': 'volume'
+}
+
 def get_american_candles(ticker, period, interval):
 	df = yf.Ticker(ticker).history(
-		period=period, interval=interval
+		period=period, interval=interval, progress=False
 	)
-	df.rename(columns={"Open": 'open', 'Close': 'close'}, inplace=True)
+	df.rename(columns=COL_NAMES, inplace=True)
 	return df
 
 if __name__ == '__main__':
