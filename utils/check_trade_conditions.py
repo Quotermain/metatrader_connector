@@ -34,13 +34,13 @@ def check_trade_conditions(ticker, tf_day, tf_hour, tf_5min, tf_1min):
     )
     THRESH_HOUR = (
         open_close_hour_dif_mean[ticker] +
-        2 * open_close_hour_dif_std[ticker]
+        3 * open_close_hour_dif_std[ticker]
     )
 
     condition_short = tf_5min.RSI[-1] >= 70 and tf_1min.RSI[-1] >= 70 and (
             (
                 (tf_day.close[-1] - tf_day.open[-1]) /
-                tf_day.open[-1] >= THRESH_DAY
+                tf_day.open[-1] >= 0
             )
         ) and (
             (
@@ -51,7 +51,7 @@ def check_trade_conditions(ticker, tf_day, tf_hour, tf_5min, tf_1min):
     condition_long = tf_5min.RSI[-1] <= 30 and tf_1min.RSI[-1] <= 30 and (
             (
                 (tf_day.open[-1] - tf_day.close[-1]) /
-                tf_day.open[-1] >= THRESH_DAY
+                tf_day.open[-1] >= 0
             )
         ) and (
             (

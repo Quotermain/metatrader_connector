@@ -104,8 +104,9 @@ if __name__ == '__main__':
             break
         except KeyError as e:
             print(e)
+            continue
         except Exception as e:
-            print(e)
-            send_message(e)
+            #print(e)
+            #send_message(e)
             #sleep(50000)
             continue

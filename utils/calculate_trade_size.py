@@ -5,7 +5,7 @@ USDRUB = 75
 def calculate_trade_size(ticker, acceptable_PERC_loss, last_close):
     if '.MM' in ticker:
         last_close = last_close / USDRUB
-    trade_size = 10 / (acceptable_PERC_loss * last_close)
+    trade_size = 5 / (acceptable_PERC_loss * last_close)
     return trade_size
 
 if __name__ == '__main__':
