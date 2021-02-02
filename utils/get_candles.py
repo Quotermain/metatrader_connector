@@ -4,6 +4,10 @@ import pytz
 import pandas as pd
 import sys
 
+COL_NAMES = {
+    'real_volume': 'volume'
+}
+
 def get_candles(ticker, timeframe, n_candles):
     if not mt5.initialize():
         print("initialize() failed, error code =", mt5.last_error())
@@ -16,6 +20,7 @@ def get_candles(ticker, timeframe, n_candles):
     rates_frame.set_index('time', inplace=True)
     rates_frame.index = rates_frame.index.tz_localize(tz='Etc/UTC')
     rates_frame.index = rates_frame.index.tz_convert('Europe/Moscow')
+    rates_frame.rename(columns=COL_NAMES, inplace=True)
     return rates_frame
 
 if __name__ == '__main__':
