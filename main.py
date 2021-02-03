@@ -24,7 +24,9 @@ with open('data/tickers/currencies.pickle', 'rb') as file:
     CURRENCIES = pickle.load(file)
 with open('data/tickers/usa_stocks.pickle', 'rb') as file:
     USA_STOCKS = pickle.load(file)
-ALL_TICKERS = RUS_STOCKS + CURRENCIES + USA_STOCKS
+with open('data/tickers/usa_volume_leaders.pickle', 'rb') as file:
+    USA_VOLUME_LEADERS = pickle.load(file)
+ALL_TICKERS = list(set(RUS_STOCKS + CURRENCIES + USA_STOCKS + USA_VOLUME_LEADERS))
 
 data_path = 'data/thresholds/'
 
@@ -106,7 +108,7 @@ if __name__ == '__main__':
             print(e)
             continue
         except Exception as e:
-            #print(e)
-            #send_message(e)
-            #sleep(50000)
+            print(e)
+            send_message(e)
+            sleep(50000)
             continue

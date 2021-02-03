@@ -30,7 +30,8 @@ with open(data_path + 'open_close_1min_dif_std.pickle', 'rb') as file:
 def check_trade_conditions(ticker, tf_day, tf_hour, tf_5min, tf_1min):
 
     THRESH_DAY = (
-        open_close_hour_dif_mean[ticker]
+        open_close_hour_dif_mean[ticker] +
+        2 * open_close_day_dif_std[ticker]
     )
     THRESH_HOUR = (
         open_close_hour_dif_mean[ticker] +
@@ -40,7 +41,7 @@ def check_trade_conditions(ticker, tf_day, tf_hour, tf_5min, tf_1min):
     condition_short = tf_5min.RSI[-1] >= 70 and tf_1min.RSI[-1] >= 70 and (
             (
                 (tf_day.close[-1] - tf_day.open[-1]) /
-                tf_day.open[-1] >= 0
+                tf_day.open[-1] >= THRESH_DAY
             )
         ) and (
             (
@@ -51,7 +52,7 @@ def check_trade_conditions(ticker, tf_day, tf_hour, tf_5min, tf_1min):
     condition_long = tf_5min.RSI[-1] <= 30 and tf_1min.RSI[-1] <= 30 and (
             (
                 (tf_day.open[-1] - tf_day.close[-1]) /
-                tf_day.open[-1] >= 0
+                tf_day.open[-1] >= THRESH_DAY
             )
         ) and (
             (
