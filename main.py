@@ -77,8 +77,9 @@ def run(ticker):
 
             acceptable_PERC_loss = (
                 open_close_5min_dif_mean[ticker] +
-                open_close_5min_dif_std[ticker]
+                3 * open_close_5min_dif_std[ticker]
             )
+
             last_close = df_5min.close[-1]
             trade_size = calculate_trade_size(
                 ticker, acceptable_PERC_loss, last_close
@@ -90,7 +91,12 @@ def run(ticker):
 
             direction = 'sell' if signal == 'sell' else 'buy'
             send_message(ticker + ' ' + direction + ' ' + str(trade_size))
-            print(send_transaction(ticker, trade_size, direction))
+            print(
+                send_transaction(
+                    ticker, trade_size, direction, last_close,
+                    acceptable_PERC_loss, info.digits
+                )
+            )
             cur_time = datetime.now().time()
             print(cur_time, ticker, direction, trade_size)
             set_signal_is_sent_flag(ticker)
